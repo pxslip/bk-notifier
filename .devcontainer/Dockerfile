@@ -2,9 +2,9 @@
 
 # [Choice] Node.js version (use -bullseye variants on local arm64/Apple Silicon): 16, 14, 12, 16-bullseye, 14-bullseye, 12-bullseye, 16-buster, 14-buster, 12-buster
 ARG VARIANT="16-bullseye"
-ARG CLI_VERSION="1.43.0"
 FROM mcr.microsoft.com/vscode/devcontainers/typescript-node:0-${VARIANT}
 
+ARG CLI_VERSION="1.43.0"
 WORKDIR /tmp
 RUN apt-get update\
   && apt-get install -y wget unzip\
@@ -13,5 +13,4 @@ RUN apt-get update\
   && ./sam-installer/install\
   && apt-get purge -y --auto-remove wget unzip\
   && rm -rf sam-installer aws-sam-cli-linux-x86_64.zip
-
 
