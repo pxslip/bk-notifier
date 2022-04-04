@@ -1,14 +1,14 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.231.1/containers/typescript-node
 {
-	"name": "Node.js & TypeScript",
+	"name": "BK Twitch Notifier",
 	"build": {
 		"dockerfile": "Dockerfile",
 		// Update 'VARIANT' to pick a Node version: 16, 14, 12.
 		// Append -bullseye or -buster to pin to an OS version.
 		// Use -bullseye variants on local on arm64/Apple Silicon.
 		"args": { 
-			"VARIANT": "16-bullseye"
+			"VARIANT": "14-bullseye"
 		}
 	},
 
