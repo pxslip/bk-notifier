@@ -28,7 +28,7 @@
     "mutantdino.resourcemonitor",
     "redhat.vscode-yaml"
   ],
-
+  "mounts": ["source=${env:HOME}${env:USERPROFILE}/.aws,target=/node/.aws,type=bind"],
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   // "forwardPorts": [],
 
