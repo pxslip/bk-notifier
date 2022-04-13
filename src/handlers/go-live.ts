@@ -2,8 +2,9 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { VerificationRequestBody } from '../../types/twitch';
 import { verifyMessage } from '../lib/twitch-hmac-verification';
 import axios from 'axios';
+import getHeader from '../lib/get-header';
 
-const TWITCH_MESSAGE_TYPE = 'Twitch-Eventsub-Message-Type'.toLowerCase();
+const TWITCH_MESSAGE_TYPE = 'Twitch-Eventsub-Message-Type';
 
 // Notification message types
 const MESSAGE_TYPE_VERIFICATION = 'webhook_callback_verification';
@@ -24,30 +25,40 @@ export default async function (event: APIGatewayProxyEvent): Promise<APIGatewayP
     statusCode: 404,
     body: 'Resource Not Found',
   };
-  const type = event.headers[TWITCH_MESSAGE_TYPE];
+  const type = getHeader(event.headers, TWITCH_MESSAGE_TYPE);
   try {
-    if (verifyMessage(event)) {
-      const body: VerificationRequestBody = JSON.parse(event.body || '{}');
+    const matches = verifyMessage(event);
+    if (matches === true) {
       if (type === MESSAGE_TYPE_VERIFICATION) {
+        const body: VerificationRequestBody = JSON.parse(event.body || '{}');
         response = {
           statusCode: 200,
           body: body.challenge,
+          headers: {
+            'Content-Type': 'text/plain',
+          },
         };
       } else if (type === MESSAGE_TYPE_NOTIFICATION) {
         // respond as empty so twitch doesn't get twitchy
         response = {
-          statusCode: 204,
-          body: '',
+          statusCode: 200,
+          body: 'Notification received',
         };
         // trigger the discord webhook
         const webhookUrl = process.env.DISCORD_GO_LIVE_WEBHOOK;
         if (webhookUrl) {
-          axios.post(webhookUrl, {
-            content: process.env.GO_LIVE_MESSAGE,
-          });
+          try {
+            await axios.post(webhookUrl, {
+              content: process.env.GO_LIVE_MESSAGE,
+            });
+          } catch (exc) {
+            console.error(exc);
+          }
         }
       } else if (type === MESSAGE_TYPE_REVOCATION) {
         console.log('Authorization revoked!');
+      } else {
+        response.body = 'Message type mismatch';
       }
     }
   } catch (err) {

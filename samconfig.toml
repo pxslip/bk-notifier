@@ -2,3 +2,13 @@ version = 0.1
 
 [default.global.parameters]
 beta_features = true
+
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "bk-notifier"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-qjzo1zlctrax"
+s3_prefix = "bk-notifier"
+region = "us-east-1"
+capabilities = "CAPABILITY_IAM"
+image_repositories = []
+parameter_overrides = "GoLiveMessage=\"\\\"BK is online! Come hang out at https://www.twitch.tv/brittleknee!\\\"\""

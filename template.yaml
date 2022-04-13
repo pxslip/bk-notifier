@@ -5,12 +5,11 @@ Description: >
 
 Parameters:
   GoLiveWebhookUrl:
+    Type: String
     Description: >
       The url of the Discord webhook to trigger when the go-live event is fired
-  TwitchToken:
-    Description: >
-      The application token to use when authenticating with twitch
   GoLiveMessage:
+    Type: String
     Description: >
       The message to post when this webhook is triggered
 
@@ -35,11 +34,10 @@ Resources:
           Properties:
             Path: /go-live
             Method: post
-    Environment:
-      Variables:
-        DISCORD_GO_LIVE_WEBHOOK: !Ref GoLiveWebHookUrl
-        TWITCH_TOKEN: !Ref TwitchToken
-        GO_LIVE_MESSAGE: !Ref GoLiveMessages
+      Environment:
+        Variables:
+          DISCORD_GO_LIVE_WEBHOOK: !Ref GoLiveWebhookUrl
+          GO_LIVE_MESSAGE: !Ref GoLiveMessage
     Metadata: # Manage esbuild properties
       BuildMethod: esbuild
       BuildProperties:
@@ -53,9 +51,9 @@ Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
-  GoLiveApi:
-    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
+  APIBaseUrl:
+    Description: "API Gateway endpoint URL for Prod stage functions"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
   GoLiveFunction:
     Description: "Hello World Lambda Function ARN"
     Value: !GetAtt GoLiveFunction.Arn
