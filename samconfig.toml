@@ -11,4 +11,3 @@ s3_prefix = "bk-notifier"
 region = "us-east-1"
 capabilities = "CAPABILITY_IAM"
 image_repositories = []
-parameter_overrides = "GoLiveMessage=\"\\\"BK is online! Come hang out at https://www.twitch.tv/brittleknee!\\\"\""

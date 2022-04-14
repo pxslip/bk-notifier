@@ -3,7 +3,7 @@ import { createHmac, timingSafeEqual } from 'crypto';
 import getHeader from './get-header';
 
 //TODO: stick this in an env variable
-const HMAC_SECRET = 'zZ3Ptyy5UAMYw7tinizS';
+const HMAC_SECRET = process.env.TWITCH_HMAC_SECRET as string;
 
 const TWITCH_MESSAGE_ID = 'Twitch-Eventsub-Message-Id';
 const TWITCH_MESSAGE_TIMESTAMP = 'Twitch-Eventsub-Message-Timestamp';
@@ -32,5 +32,5 @@ export function verifyMessage(request: APIGatewayProxyEvent): boolean | string {
   if (signature) {
     return timingSafeEqual(Buffer.from(hmac), Buffer.from(signature));
   }
-  return hmac;
+  return false;
 }

@@ -5,13 +5,17 @@ Description: >
 
 Parameters:
   GoLiveWebhookUrl:
-    Type: String
-    Description: >
-      The url of the Discord webhook to trigger when the go-live event is fired
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /sam/twitch-notifier/go-live/webhook
+    Description: The url of the Discord webhook to trigger when the go-live event is fired
   GoLiveMessage:
-    Type: String
-    Description: >
-      The message to post when this webhook is triggered
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /sam/twitch-notifier/go-live/message
+    Description: The message to post to discrod when this webhook is triggered
+  TwitchHmacSecret:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /sam/twitch-notifier/twitch-hmac-secret
+    Description: A secret to be used when verifying the message signature from twitch events
 
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
@@ -37,7 +41,8 @@ Resources:
       Environment:
         Variables:
           DISCORD_GO_LIVE_WEBHOOK: !Ref GoLiveWebhookUrl
-          GO_LIVE_MESSAGE: !Ref GoLiveMessage
+          DISCORD_GO_LIVE_MESSAGE: !Ref GoLiveMessage
+          TWITCH_HMAC_SECRET: !Ref TwitchHmacSecret
     Metadata: # Manage esbuild properties
       BuildMethod: esbuild
       BuildProperties:

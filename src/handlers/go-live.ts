@@ -49,10 +49,10 @@ export default async function (event: APIGatewayProxyEvent): Promise<APIGatewayP
         if (webhookUrl) {
           try {
             await axios.post(webhookUrl, {
-              content: process.env.GO_LIVE_MESSAGE,
+              content: process.env.DISCORD_GO_LIVE_MESSAGE,
             });
-          } catch (exc) {
-            console.error(exc);
+          } catch (exc: any) {
+            console.error(exc.message);
           }
         }
       } else if (type === MESSAGE_TYPE_REVOCATION) {

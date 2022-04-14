@@ -6,5 +6,5 @@ Currently there is one endpoint `/go-live` that handles the `stream.online` even
 
 ## Parameters for the system
 
-- `GoLiveWebhookUrl` is the discord webhook url to send a message to when the event is triggered
-- `GoLiveMessage` is the message to send to the discord webhook
+- Use the `.env-template.json` to set your values
+- Use `utils/update-params.js` to update the SSM parameters for build and deploy
