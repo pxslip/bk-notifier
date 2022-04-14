@@ -7,36 +7,18 @@
     {
       "type": "aws-sam",
       "request": "direct-invoke",
-      "name": "bk-notifier:GoLiveFunction (nodejs14.x)",
-      "sam": { "buildArguments": ["--beta-features"] },
-      "invokeTarget": {
-        "target": "template",
-        "templatePath": "${workspaceFolder}/template.yaml",
-        "logicalId": "GoLiveFunction"
-      },
-      "lambda": {
-        "payload": {},
-        "environmentVariables": {}
-      }
-    },
-    {
-      "type": "aws-sam",
-      "request": "direct-invoke",
-      "name": "API bk-notifier:GoLiveFunction (nodejs14.x)",
+      "name": "API bk-notifier:GoLiveFunction",
       "invokeTarget": {
         "target": "api",
         "templatePath": "${workspaceFolder}/template.yaml",
         "logicalId": "GoLiveFunction"
       },
       "api": {
-        "path": "/hello",
+        "path": "/go-live",
         "httpMethod": "get",
         "payload": {
           "json": {}
         }
-      },
-      "lambda": {
-        "runtime": "nodejs14.x"
       }
     }
   ]

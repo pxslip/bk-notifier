@@ -1,46 +1,64 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  sam-app
+  Twitch eventsub handlers
 
-  Sample SAM Template for sam-app
-  
+Parameters:
+  GoLiveWebhookUrl:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /sam/twitch-notifier/go-live/webhook
+    Description: The url of the Discord webhook to trigger when the go-live event is fired
+  GoLiveMessage:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /sam/twitch-notifier/go-live/message
+    Description: The message to post to discrod when this webhook is triggered
+  TwitchHmacSecret:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /sam/twitch-notifier/twitch-hmac-secret
+    Description: A secret to be used when verifying the message signature from twitch events
+
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
     Timeout: 3
+    Runtime: nodejs14.x
+    CodeUri: .
+    Architectures:
+      - x86_64
+
 
 Resources:
   GoLiveFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: src/
-      Handler: app.goLiveHandler
-      Runtime: nodejs14.x
-      Architectures:
-        - x86_64
+      Handler: src/app.goLiveHandler
       Events:
         GoLive:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /hello
-            Method: get
+            Path: /go-live
+            Method: post
+      Environment:
+        Variables:
+          DISCORD_GO_LIVE_WEBHOOK: !Ref GoLiveWebhookUrl
+          DISCORD_GO_LIVE_MESSAGE: !Ref GoLiveMessage
+          TWITCH_HMAC_SECRET: !Ref TwitchHmacSecret
     Metadata: # Manage esbuild properties
       BuildMethod: esbuild
       BuildProperties:
         Minify: true
         Target: "es2020"
         Sourcemap: true
-        EntryPoints: 
-        - app.ts
+        EntryPoints:
+        - src/app.ts
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
-  GoLiveApi:
-    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
+  APIBaseUrl:
+    Description: "API Gateway endpoint URL for Prod stage functions"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
   GoLiveFunction:
     Description: "Hello World Lambda Function ARN"
     Value: !GetAtt GoLiveFunction.Arn
