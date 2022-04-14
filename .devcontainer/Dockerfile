@@ -7,7 +7,7 @@ FROM mcr.microsoft.com/vscode/devcontainers/typescript-node:0-${VARIANT}
 ARG CLI_VERSION="1.43.0"
 WORKDIR /tmp
 RUN apt-get update\
-  && apt-get install -y wget unzip\
+  && apt-get install -y wget unzip bash-completion\
   && wget https://github.com/aws/aws-sam-cli/releases/download/v${CLI_VERSION}/aws-sam-cli-linux-x86_64.zip\
   && unzip aws-sam-cli-linux-x86_64.zip -d sam-installer\
   && ./sam-installer/install\

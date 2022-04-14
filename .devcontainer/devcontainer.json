@@ -8,7 +8,8 @@
     // Append -bullseye or -buster to pin to an OS version.
     // Use -bullseye variants on local on arm64/Apple Silicon.
     "args": {
-      "VARIANT": "14-bullseye"
+      "VARIANT": "14-bullseye",
+      "CLI_VERSION": "1.46.0"
     }
   },
 
@@ -28,7 +29,7 @@
     "mutantdino.resourcemonitor",
     "redhat.vscode-yaml"
   ],
-
+  "mounts": ["source=${env:HOME}${env:USERPROFILE}/.aws,target=/home/node/.aws,type=bind"],
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   // "forwardPorts": [],
 
